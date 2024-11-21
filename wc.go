@@ -18,11 +18,12 @@ import (
 	"os"
 )
 
-var count_bytes bool
+var countBytes bool
 var file_name string
 var file io.Reader
 
 func CountBytes(file io.Reader, writer io.Writer) {
+func ByteCounter(file io.Reader, writer io.Writer) {
 	count := 0
 	byte_slice := make([]byte, 1024)
 	if file == nil {
@@ -40,7 +41,7 @@ func CountBytes(file io.Reader, writer io.Writer) {
 }
 
 func init() {
-	flag.BoolVar(&count_bytes, "c", false, "Count bytes")
+	flag.BoolVar(&countBytes, "c", false, "Count bytes")
 }
 func main() {
 
@@ -57,8 +58,8 @@ func main() {
 			os.Exit(1)
 		}
 	}
-	if count_bytes {
-		CountBytes(file, os.Stdout)
+	if countBytes {
+		ByteCounter(file, os.Stdout)
 	}
 	fmt.Print(" ", file_name, " ")
 

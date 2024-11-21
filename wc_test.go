@@ -13,7 +13,7 @@ func TestCountBytes(t *testing.T) {
 	buffer := bytes.Buffer{}
 	reader := bytes.NewReader(make([]byte, 10))
 	readerSize := reader.Size()
-	CountBytes(reader, &buffer)
+	ByteCounter(reader, &buffer)
 	buffer_val, err := strconv.Atoi(buffer.String())
 	if err != nil {
 		t.Error("Error converting buffer value to string", err)
