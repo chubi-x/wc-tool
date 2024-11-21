@@ -22,13 +22,12 @@ var count_bytes bool
 var file_name string
 var file io.Reader
 
-func CountBytes(file io.Reader) int {
+func CountBytes(file io.Reader, writer io.Writer) {
 	count := 0
 	byte_slice := make([]byte, 1024)
 	if file == nil {
 		fmt.Println("The provided file does not exist!")
 		os.Exit(1)
-
 	}
 	for {
 		n, err := file.Read(byte_slice)
@@ -37,7 +36,7 @@ func CountBytes(file io.Reader) int {
 			break
 		}
 	}
-	return count
+	fmt.Fprint(writer, count)
 }
 
 func init() {
@@ -59,9 +58,8 @@ func main() {
 		}
 	}
 	if count_bytes {
-		count := CountBytes(file)
-		fmt.Print(count, " ")
+		CountBytes(file, os.Stdout)
 	}
-	fmt.Print(file_name, " ")
+	fmt.Print(" ", file_name, " ")
 
 }
