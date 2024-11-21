@@ -22,7 +22,7 @@ var count_bytes bool
 var file_name string
 var file io.Reader
 
-func countBytes(file io.Reader) int {
+func CountBytes(file io.Reader) int {
 	count := 0
 	byte_slice := make([]byte, 1024)
 	if file == nil {
@@ -59,7 +59,7 @@ func main() {
 		}
 	}
 	if count_bytes {
-		count := countBytes(file)
+		count := CountBytes(file)
 		fmt.Print(count, " ")
 	}
 	fmt.Print(file_name, " ")
