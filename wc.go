@@ -63,29 +63,30 @@ func init() {
 func main() {
 
 	var file io.Reader
-	var buf *[]byte
+	var buf *bytes.Buffer
 	flag.Parse()
+
 	if file_arg := flag.Arg(0); file_arg == "" {
-		file = os.Stdin
+		buf = bytes.NewBuffer(make([]byte, 0))
+		_, err := io.Copy(buf, os.Stdin)
 	} else {
 		fileName = file_arg
 		open_file, err := os.Open(fileName)
-
-		byteSlice, copyErr := io.ReadAll(open_file)
-		buf = &byteSlice
 
 		if err != nil || copyErr != nil {
 			fmt.Println("Unable to open file: ", fileName)
 			os.Exit(1)
 		}
+		buf = bytes.NewBuffer(make([]byte, 0))
+		_, copyErr := io.Copy(buf, open_file)
 		defer open_file.Close()
 	}
 	if countBytes {
-		file = bytes.NewReader(*buf)
+		file = bytes.NewReader(buf.Bytes())
 		ByteCounter(file, os.Stdout)
 	}
 	if countLines {
-		file = bytes.NewReader(*buf)
+		file = bytes.NewReader(buf.Bytes())
 		LineCounter(file, os.Stdout)
 	}
 	fmt.Print(" ", fileName, " ")
