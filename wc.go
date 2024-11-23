@@ -26,17 +26,13 @@ var fileName string
 
 func LineCounter(file io.Reader, writer io.Writer) {
 	count := 0
-	// file, err := os.Open("test.txt")
-	//
-	// if err != nil {
-	//
-	// }
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
 		count++
 	}
 	if err := scanner.Err(); err != nil {
-		fmt.Println("There was a problem scanning the input: ", err)
+		fmt.Println("There was a problem counting lines:", err)
+		os.Exit(1)
 	}
 
 	fmt.Fprint(writer, " ", count)
