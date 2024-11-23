@@ -12,6 +12,8 @@
 package main
 
 import (
+	"bufio"
+	"bytes"
 	"flag"
 	"fmt"
 	"io"
@@ -21,8 +23,8 @@ import (
 var countBytes bool
 var file_name string
 var file io.Reader
+var fileName string
 
-func CountBytes(file io.Reader, writer io.Writer) {
 func ByteCounter(file io.Reader, writer io.Writer) {
 	count := 0
 	byte_slice := make([]byte, 1024)
@@ -45,20 +47,26 @@ func init() {
 }
 func main() {
 
+	var file io.Reader
+	var buf *[]byte
 	flag.Parse()
 	if file_arg := flag.Arg(0); file_arg == "" {
 		file = os.Stdin
 	} else {
-		file_name = file_arg
-		open_file, err := os.Open(file_name)
-		defer open_file.Close()
-		file = open_file
-		if err != nil {
-			fmt.Println("Unable to open file: ", file_name)
+		fileName = file_arg
+		open_file, err := os.Open(fileName)
+
+		byteSlice, copyErr := io.ReadAll(open_file)
+		buf = &byteSlice
+
+		if err != nil || copyErr != nil {
+			fmt.Println("Unable to open file: ", fileName)
 			os.Exit(1)
 		}
+		defer open_file.Close()
 	}
 	if countBytes {
+		file = bytes.NewReader(*buf)
 		ByteCounter(file, os.Stdout)
 	}
 	fmt.Print(" ", file_name, " ")
