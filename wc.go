@@ -21,29 +21,48 @@ import (
 )
 
 var countBytes bool
-var file_name string
-var file io.Reader
+var countLines bool
 var fileName string
+
+func LineCounter(file io.Reader, writer io.Writer) {
+	count := 0
+	// file, err := os.Open("test.txt")
+	//
+	// if err != nil {
+	//
+	// }
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		count++
+	}
+	if err := scanner.Err(); err != nil {
+		fmt.Println("There was a problem scanning the input: ", err)
+	}
+
+	fmt.Fprint(writer, " ", count)
+}
 
 func ByteCounter(file io.Reader, writer io.Writer) {
 	count := 0
-	byte_slice := make([]byte, 1024)
+	scanner := bufio.NewScanner(file)
+	scanner.Split(bufio.ScanBytes)
 	if file == nil {
 		fmt.Println("The provided file does not exist!")
 		os.Exit(1)
 	}
-	for {
-		n, err := file.Read(byte_slice)
-		count += n
-		if err == io.EOF {
-			break
-		}
+	for scanner.Scan() {
+		count++
 	}
+	if err := scanner.Err(); err != nil {
+		fmt.Println("There was a problem scanning the input: ", err)
+	}
+
 	fmt.Fprint(writer, count)
 }
 
 func init() {
 	flag.BoolVar(&countBytes, "c", false, "Count bytes")
+	flag.BoolVar(&countLines, "l", false, "Count Lines")
 }
 func main() {
 
@@ -69,6 +88,10 @@ func main() {
 		file = bytes.NewReader(*buf)
 		ByteCounter(file, os.Stdout)
 	}
-	fmt.Print(" ", file_name, " ")
+	if countLines {
+		file = bytes.NewReader(*buf)
+		LineCounter(file, os.Stdout)
+	}
+	fmt.Print(" ", fileName, " ")
 
 }
