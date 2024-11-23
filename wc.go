@@ -32,7 +32,7 @@ func handleError(message string, err error) {
 
 }
 
-func LineCounter(file io.Reader, writer io.Writer) {
+func LineCounter(file io.Reader) int {
 	count := 0
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
@@ -48,10 +48,10 @@ func LineCounter(file io.Reader, writer io.Writer) {
 		}
 	}
 
-	fmt.Fprint(writer, " ", count)
+	return count
 }
 
-func ByteCounter(file io.Reader, writer io.Writer) {
+func ByteCounter(file io.Reader) int {
 	count := 0
 	scanner := bufio.NewScanner(file)
 	scanner.Split(bufio.ScanBytes)
@@ -61,8 +61,7 @@ func ByteCounter(file io.Reader, writer io.Writer) {
 	if err := scanner.Err(); err != nil {
 		fmt.Println("There was a problem scanning the input: ", err)
 	}
-
-	fmt.Fprint(writer, count)
+	return count
 }
 
 func init() {
@@ -91,11 +90,11 @@ func main() {
 	}
 	if countBytes {
 		file = bytes.NewReader(buf.Bytes())
-		ByteCounter(file, os.Stdout)
+		ByteCounter(file)
 	}
 	if countLines {
 		file = bytes.NewReader(buf.Bytes())
-		LineCounter(file, os.Stdout)
+		LineCounter(file)
 	}
 	fmt.Print(" ", fileName, " ")
 
