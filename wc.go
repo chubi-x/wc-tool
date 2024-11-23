@@ -24,6 +24,14 @@ var countBytes bool
 var countLines bool
 var fileName string
 
+func handleError(message string, err error) {
+	if err != nil {
+		fmt.Println(message, ": ", err)
+		os.Exit(1)
+	}
+
+}
+
 func LineCounter(file io.Reader, writer io.Writer) {
 	count := 0
 	scanner := bufio.NewScanner(file)
@@ -69,16 +77,15 @@ func main() {
 	if file_arg := flag.Arg(0); file_arg == "" {
 		buf = bytes.NewBuffer(make([]byte, 0))
 		_, err := io.Copy(buf, os.Stdin)
+		handleError("Unable to read from Stdin", err)
 	} else {
 		fileName = file_arg
 		open_file, err := os.Open(fileName)
 
-		if err != nil || copyErr != nil {
-			fmt.Println("Unable to open file: ", fileName)
-			os.Exit(1)
-		}
 		buf = bytes.NewBuffer(make([]byte, 0))
 		_, copyErr := io.Copy(buf, open_file)
+		handleError("Unable to read from stdin: ", err)
+		handleError("Error opening file: "+fileName, copyErr)
 		defer open_file.Close()
 	}
 	if countBytes {
