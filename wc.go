@@ -50,10 +50,6 @@ func ByteCounter(file io.Reader, writer io.Writer) {
 	count := 0
 	scanner := bufio.NewScanner(file)
 	scanner.Split(bufio.ScanBytes)
-	if file == nil {
-		fmt.Println("The provided file does not exist!")
-		os.Exit(1)
-	}
 	for scanner.Scan() {
 		count++
 	}
