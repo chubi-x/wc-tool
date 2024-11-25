@@ -95,12 +95,14 @@ func main() {
 	}
 	if countBytes {
 		file = bytes.NewReader(buf.Bytes())
-		ByteCounter(file)
+		byteCount = ByteCounter(file)
+		fmt.Print(byteCount, " ")
 	}
 	if countLines {
 		file = bytes.NewReader(buf.Bytes())
-		LineCounter(file)
+		lineCount = LineCounter(file)
+		fmt.Print(lineCount, " ")
 	}
-	fmt.Print(" ", fileName, " ")
+	fmt.Print(fileName, " ")
 
 }
