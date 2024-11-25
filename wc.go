@@ -70,8 +70,13 @@ func init() {
 }
 func main() {
 
-	var file io.Reader
-	var buf *bytes.Buffer
+	var (
+		file      io.Reader
+		buf       *bytes.Buffer
+		lineCount int
+		byteCount int
+	)
+
 	flag.Parse()
 
 	if file_arg := flag.Arg(0); file_arg == "" {
