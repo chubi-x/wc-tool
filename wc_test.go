@@ -5,6 +5,7 @@ package main
 
 import (
 	"bytes"
+	"strings"
 	"testing"
 )
 
@@ -15,5 +16,14 @@ func TestCountBytes(t *testing.T) {
 
 	if count != int(readerSize) {
 		t.Errorf("Expected byte count %d, got count %d", readerSize, count)
+	}
+}
+func TestCountLines(t *testing.T) {
+	reader := strings.NewReader("This is one line \n this is another line \n this is a third line")
+	lineCount := 3
+	count := LineCounter(reader)
+
+	if count != int(lineCount) {
+		t.Errorf("Expected line count %d, got count %d", lineCount, count)
 	}
 }
