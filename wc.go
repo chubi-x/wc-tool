@@ -25,52 +25,29 @@ var countLines bool
 var countWords bool
 var fileName string
 
-func handleError(message string, err error) {
+func handleError(counterType string, err error) {
 	if err != nil {
-		fmt.Println(message, ": ", err)
+		fmt.Sprintf("There was a problem counting %s: %s", counterType, err)
 		os.Exit(1)
 	}
 
 }
-
-func LineCounter(file io.Reader) int {
+func Counter(buf *bytes.Buffer, count_object string) int {
 	count := 0
-	scanner := bufio.NewScanner(file)
-	for scanner.Scan() {
-		count++
+	scanner := bufio.NewScanner(bytes.NewReader(buf.Bytes()))
+	switch count_object {
+	case "words":
+		scanner.Split(bufio.ScanWords)
 
+	case "lines":
+		scanner.Split(bufio.ScanLines)
+	case "bytes":
+		scanner.Split(bufio.ScanBytes)
 	}
-	if err := scanner.Err(); err != nil {
-		if err == bufio.ErrTooLong {
-			count = 0
-		} else {
-			fmt.Println("There was a problem counting lines:", err)
-			os.Exit(1)
-		}
-	}
-
-	return count
-}
-
-func WordCounter(file io.Reader) int {
-	count := 0
-	scanner := bufio.NewScanner(file)
-	scanner.Split(bufio.ScanWords)
 	for scanner.Scan() {
 		count++
 	}
-	handleError("There was a problem counting words: ", scanner.Err())
-	return count
-}
-
-func ByteCounter(file io.Reader) int {
-	count := 0
-	scanner := bufio.NewScanner(file)
-	scanner.Split(bufio.ScanBytes)
-	for scanner.Scan() {
-		count++
-	}
-	handleError("There was a problem counting bytes:", scanner.Err())
+	handleError(count_object, scanner.Err())
 	return count
 }
 
@@ -82,11 +59,7 @@ func init() {
 func main() {
 
 	var (
-		file      io.Reader
-		buf       *bytes.Buffer
-		lineCount int
-		byteCount int
-		wordCount int
+		buf *bytes.Buffer
 	)
 
 	flag.Parse()
@@ -106,19 +79,13 @@ func main() {
 		defer open_file.Close()
 	}
 	if countBytes {
-		file = bytes.NewReader(buf.Bytes())
-		byteCount = ByteCounter(file)
-		fmt.Print(byteCount, " ")
+		fmt.Print(Counter(buf, "bytes"), " ")
 	}
 	if countLines {
-		file = bytes.NewReader(buf.Bytes())
-		lineCount = LineCounter(file)
-		fmt.Print(lineCount, " ")
+		fmt.Print(Counter(buf, "lines"), " ")
 	}
 	if countWords {
-		file = bytes.NewReader(buf.Bytes())
-		wordCount = WordCounter(file)
-		fmt.Print(wordCount, " ")
+		fmt.Print(Counter(buf, "words"), " ")
 	}
 	fmt.Print(fileName, " ")
 
