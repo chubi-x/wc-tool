@@ -27,3 +27,12 @@ func TestCountLines(t *testing.T) {
 		t.Errorf("Expected line count %d, got count %d", lineCount, count)
 	}
 }
+func TestCountWords(t *testing.T) {
+	reader := strings.NewReader("There are four words")
+	wordCount := 4
+	count := WordCounter(reader)
+
+	if count != int(wordCount) {
+		t.Errorf("Expected word count %d, got count %d", wordCount, count)
+	}
+}

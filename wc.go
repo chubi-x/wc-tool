@@ -22,6 +22,7 @@ import (
 
 var countBytes bool
 var countLines bool
+var countWords bool
 var fileName string
 
 func handleError(message string, err error) {
@@ -51,6 +52,17 @@ func LineCounter(file io.Reader) int {
 	return count
 }
 
+func WordCounter(file io.Reader) int {
+	count := 0
+	scanner := bufio.NewScanner(file)
+	scanner.Split(bufio.ScanWords)
+	for scanner.Scan() {
+		count++
+	}
+	handleError("There was a problem counting words: ", scanner.Err())
+	return count
+}
+
 func ByteCounter(file io.Reader) int {
 	count := 0
 	scanner := bufio.NewScanner(file)
@@ -65,6 +77,7 @@ func ByteCounter(file io.Reader) int {
 func init() {
 	flag.BoolVar(&countBytes, "c", false, "Count bytes")
 	flag.BoolVar(&countLines, "l", false, "Count Lines")
+	flag.BoolVar(&countWords, "w", false, "Count Words")
 }
 func main() {
 
@@ -73,6 +86,7 @@ func main() {
 		buf       *bytes.Buffer
 		lineCount int
 		byteCount int
+		wordCount int
 	)
 
 	flag.Parse()
@@ -100,6 +114,11 @@ func main() {
 		file = bytes.NewReader(buf.Bytes())
 		lineCount = LineCounter(file)
 		fmt.Print(lineCount, " ")
+	}
+	if countWords {
+		file = bytes.NewReader(buf.Bytes())
+		wordCount = WordCounter(file)
+		fmt.Print(wordCount, " ")
 	}
 	fmt.Print(fileName, " ")
 
