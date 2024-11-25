@@ -58,9 +58,7 @@ func ByteCounter(file io.Reader) int {
 	for scanner.Scan() {
 		count++
 	}
-	if err := scanner.Err(); err != nil {
-		fmt.Println("There was a problem scanning the input: ", err)
-	}
+	handleError("There was a problem counting bytes:", scanner.Err())
 	return count
 }
 
