@@ -32,13 +32,12 @@ func handleError(counterType string, err error) {
 	}
 
 }
-func Counter(buf *bytes.Buffer, count_object string) int {
+func counter(buf *bytes.Buffer, count_object string) int {
 	count := 0
 	scanner := bufio.NewScanner(bytes.NewReader(buf.Bytes()))
 	switch count_object {
 	case "words":
 		scanner.Split(bufio.ScanWords)
-
 	case "lines":
 		scanner.Split(bufio.ScanLines)
 	case "bytes":
@@ -50,7 +49,15 @@ func Counter(buf *bytes.Buffer, count_object string) int {
 	handleError(count_object, scanner.Err())
 	return count
 }
-
+func LineCounter(buf *bytes.Buffer) int {
+	return counter(buf, "lines")
+}
+func ByteCounter(buf *bytes.Buffer) int {
+	return counter(buf, "bytes")
+}
+func WordCounter(buf *bytes.Buffer) int {
+	return counter(buf, "words")
+}
 func init() {
 	flag.BoolVar(&countBytes, "c", false, "Count bytes")
 	flag.BoolVar(&countLines, "l", false, "Count Lines")
@@ -59,33 +66,31 @@ func init() {
 func main() {
 
 	var (
-		buf *bytes.Buffer
+		buf *bytes.Buffer = bytes.NewBuffer(make([]byte, 0))
 	)
 
 	flag.Parse()
 
 	if file_arg := flag.Arg(0); file_arg == "" {
-		buf = bytes.NewBuffer(make([]byte, 0))
 		_, err := io.Copy(buf, os.Stdin)
 		handleError("Unable to read from Stdin", err)
 	} else {
 		fileName = file_arg
 		open_file, err := os.Open(fileName)
 
-		buf = bytes.NewBuffer(make([]byte, 0))
 		_, copyErr := io.Copy(buf, open_file)
-		handleError("Unable to read from stdin: ", err)
+		handleError("Unable to read file: ", err)
 		handleError("Error opening file: "+fileName, copyErr)
 		defer open_file.Close()
 	}
 	if countBytes {
-		fmt.Print(Counter(buf, "bytes"), " ")
+		fmt.Print(ByteCounter(buf), " ")
 	}
 	if countLines {
-		fmt.Print(Counter(buf, "lines"), " ")
+		fmt.Print(LineCounter(buf), " ")
 	}
 	if countWords {
-		fmt.Print(Counter(buf, "words"), " ")
+		fmt.Print(WordCounter(buf), " ")
 	}
 	fmt.Print(fileName, " ")
 
