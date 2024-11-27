@@ -96,6 +96,6 @@ func main() {
 	if countChars {
 		fmt.Print(CharacterCounter(buf), " ")
 	}
-	fmt.Print(fileName, " ")
+	fmt.Println(fileName)
 
 }
