@@ -37,3 +37,21 @@ func TestCountWords(t *testing.T) {
 		t.Errorf("Expected word count %d, got count %d", wordCount, count)
 	}
 }
+func TestCountChars(t *testing.T) {
+	buf := bytes.NewBuffer([]byte("there are 24 characters"))
+	charCount := 23
+	count := CharacterCounter(buf)
+
+	if count != int(charCount) {
+		t.Errorf("Expected word count %d, got count %d", charCount, count)
+	}
+}
+func TestCountCharsNonEnglish(t *testing.T) {
+	buf := bytes.NewBuffer([]byte("河消反戶實田你民朵音相愛躲共干香"))
+	charCount := 16
+	count := CharacterCounter(buf)
+
+	if count != int(charCount) {
+		t.Errorf("Expected word count %d, got count %d", charCount, count)
+	}
+}

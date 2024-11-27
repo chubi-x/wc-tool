@@ -20,10 +20,13 @@ import (
 	"os"
 )
 
-var countBytes bool
-var countLines bool
-var countWords bool
-var fileName string
+var (
+	countBytes bool
+	countLines bool
+	countWords bool
+	countChars bool
+	fileName   string
+)
 
 func handleError(counterType string, err error) {
 	if err != nil {
@@ -42,6 +45,8 @@ func counter(buf *bytes.Buffer, count_object string) int {
 		scanner.Split(bufio.ScanLines)
 	case "bytes":
 		scanner.Split(bufio.ScanBytes)
+	case "chars":
+		scanner.Split(bufio.ScanRunes)
 	}
 	for scanner.Scan() {
 		count++
@@ -58,10 +63,14 @@ func ByteCounter(buf *bytes.Buffer) int {
 func WordCounter(buf *bytes.Buffer) int {
 	return counter(buf, "words")
 }
+func CharacterCounter(buf *bytes.Buffer) int {
+	return counter(buf, "chars")
+}
 func init() {
 	flag.BoolVar(&countBytes, "c", false, "Count bytes")
 	flag.BoolVar(&countLines, "l", false, "Count Lines")
 	flag.BoolVar(&countWords, "w", false, "Count Words")
+	flag.BoolVar(&countChars, "m", false, "Count Characters")
 }
 func main() {
 
@@ -91,6 +100,9 @@ func main() {
 	}
 	if countWords {
 		fmt.Print(WordCounter(buf), " ")
+	}
+	if countChars {
+		fmt.Print(CharacterCounter(buf), " ")
 	}
 	fmt.Print(fileName, " ")
 
