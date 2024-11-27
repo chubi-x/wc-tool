@@ -1,6 +1,6 @@
 # Word count tool
 
-Command line tool to count words, lines, characters, and bytes in a given file.
+Command line tool to count words, lines, characters, and bytes in a file or from Stdin.
 
 ## Options
 
