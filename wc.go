@@ -81,6 +81,9 @@ func main() {
 		handleError("Error opening file: "+fileName, copyErr)
 		defer open_file.Close()
 	}
+	if !countBytes && !countLines && !countWords && !countChars {
+		countBytes, countWords, countLines = true, true, true
+	}
 	if countBytes {
 		fmt.Print(ByteCounter(buf), " ")
 	}
