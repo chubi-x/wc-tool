@@ -1,14 +1,3 @@
-// accept command line args
-// positional argument should be the last
-// when its absent read from stdin
-//  -c for number of bytes
-//  -l for number of lines
-//  -m for nhumber of characters
-//  -w for number of words
-//  everything is disabled by default. only enable everything when none of them is enabled.
-//  zero args should call all 4 together
-//  print a table showing each count
-
 package main
 
 import (

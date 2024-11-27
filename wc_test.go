@@ -1,6 +1,3 @@
-//what counts as whitespace characterr?
-// test with spaces and tabs
-
 package main
 
 import (
